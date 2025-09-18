@@ -10,6 +10,7 @@ import android.view.DragEvent
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -33,13 +34,14 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setupFruits()
+        setupPlates()
 
-        setupDrop(binding.plateOne)
-        setupDrop(binding.plateTwo)
-        setupDrop(binding.plateThree)
-        setupDrop(binding.plateFour)
-        setupDrop(binding.plateFive)
-        setupDrop(binding.plateSix)
+//        setupDrop(binding.plateOne)
+//        setupDrop(binding.plateTwo)
+//        setupDrop(binding.plateThree)
+//        setupDrop(binding.plateFour)
+//        setupDrop(binding.plateFive)
+//        setupDrop(binding.plateSix)
 
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -49,7 +51,44 @@ class GameActivity : AppCompatActivity() {
         }
     }
     private val fruits = mutableListOf<Fruit>()
+    private val plates = mutableListOf<Plate>()
     var placedFruitCount = 0
+
+    private fun createPlateView(plate: Plate): GridLayout {
+        val gridLayout = GridLayout(this)
+        gridLayout.setBackgroundResource(R.drawable.ddffdd)
+        gridLayout.columnCount = 2
+        gridLayout.rowCount = 2
+        val params = LinearLayout.LayoutParams(
+            resources.getDimensionPixelSize(R.dimen.plate_size),
+            resources.getDimensionPixelSize(R.dimen.plate_size)
+        )
+
+        params.marginStart = resources.getDimensionPixelSize(R.dimen.plate_margin)
+        params.marginEnd = resources.getDimensionPixelSize(R.dimen.plate_margin)
+        params.topMargin = resources.getDimensionPixelSize(R.dimen.plate_margin)
+        params.bottomMargin = resources.getDimensionPixelSize(R.dimen.plate_margin)
+        params.gravity = Gravity.CENTER
+        gridLayout.layoutParams = params
+        gridLayout.tag = plate.id
+        setupDrop(gridLayout)
+        return gridLayout
+    }
+
+    private fun setupPlates() {
+        plates.clear()
+        repeat(6) { plates.add(Plate()) }
+        renderPlates()
+    }
+
+    private fun renderPlates() {
+        val plateContainer = findViewById<GridLayout>(R.id.plate_container)
+        plateContainer.removeAllViews()
+        for (plate in plates) {
+            val plateView = createPlateView(plate)
+            plateContainer.addView(plateView)
+        }
+    }
 
     private fun createFruitView(fruit: Fruit): ImageView {
         val imageView = ImageView(this)
