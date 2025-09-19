@@ -35,13 +35,9 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupFruits()
         setupPlates()
+        val scoreNumber = findViewById<TextView>(R.id.scoreNumber)
+        scoreNumber.text = "0"
 
-//        setupDrop(binding.plateOne)
-//        setupDrop(binding.plateTwo)
-//        setupDrop(binding.plateThree)
-//        setupDrop(binding.plateFour)
-//        setupDrop(binding.plateFive)
-//        setupDrop(binding.plateSix)
 
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -70,6 +66,7 @@ class GameActivity : AppCompatActivity() {
         params.bottomMargin = resources.getDimensionPixelSize(R.dimen.plate_margin)
         params.gravity = Gravity.CENTER
         gridLayout.layoutParams = params
+        plate.id = View.generateViewId()
         gridLayout.tag = plate.id
         setupDrop(gridLayout)
         return gridLayout
@@ -104,6 +101,7 @@ class GameActivity : AppCompatActivity() {
         params.bottomMargin = resources.getDimensionPixelSize(R.dimen.fruit_margin)
         params.gravity = Gravity.CENTER
         imageView.layoutParams = params
+        fruit.id = View.generateViewId()
         imageView.tag = fruit.id
         setupDrag(imageView)
         return imageView
@@ -129,6 +127,24 @@ class GameActivity : AppCompatActivity() {
             setupFruits()
             placedFruitCount = 0
         }
+
+        val plateContainer = findViewById<GridLayout>(R.id.plate_container)
+        for (plate in plates){
+            val gridLayout: GridLayout = plateContainer.findViewWithTag<GridLayout>(plate.id)
+            val childCount = gridLayout.childCount
+            if (childCount >= 4) {
+                gridLayout.removeAllViewsInLayout()
+                updateScore()
+            }
+        }
+    }
+
+    fun updateScore() {
+        val scoreNumber = findViewById<TextView>(R.id.scoreNumber)
+        var currentScore = scoreNumber.text.toString()
+        var newScore = currentScore.toInt()
+        newScore += 4
+        scoreNumber.text = newScore.toString()
     }
 
     fun setupDrag(draggableView: View) {

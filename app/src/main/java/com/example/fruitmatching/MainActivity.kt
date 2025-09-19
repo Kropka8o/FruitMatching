@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
+        helpButton?.setOnClickListener {
+            val intent = android.content.Intent(this, RulesActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }
