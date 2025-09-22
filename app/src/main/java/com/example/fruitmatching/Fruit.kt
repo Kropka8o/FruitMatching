@@ -1,7 +1,8 @@
 package com.example.fruitmatching
 
 class Fruit {
-    var id = 0
-    var sprite = ""
-    var colour = ""
+    var id: Int = 0
+    var sprite: String = ""
+    var colour: String = ""
+    var plateId: Int? = null
 }

@@ -5,6 +5,7 @@ import android.content.ClipDescription
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils.lastIndexOf
 import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
@@ -21,7 +22,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.fruitmatching.databinding.ActivityGameBinding
 import com.example.fruitmatching.databinding.ActivityMainBinding
+import kotlin.collections.removeAll
+import kotlin.compareTo
 import kotlin.getValue
+import kotlin.inc
+import kotlin.random.Random
 import kotlin.toString
 
 class GameActivity : AppCompatActivity() {
@@ -47,12 +52,15 @@ class GameActivity : AppCompatActivity() {
         }
     }
     private val fruits = mutableListOf<Fruit>()
+    private val placedFruits = mutableListOf<Fruit>()
     private val plates = mutableListOf<Plate>()
+    private val colours = mutableListOf("pink", "yellow")
     var placedFruitCount = 0
 
     private fun createPlateView(plate: Plate): GridLayout {
         val gridLayout = GridLayout(this)
         gridLayout.setBackgroundResource(R.drawable.ddffdd)
+
         gridLayout.columnCount = 2
         gridLayout.rowCount = 2
         val params = LinearLayout.LayoutParams(
@@ -89,7 +97,15 @@ class GameActivity : AppCompatActivity() {
 
     private fun createFruitView(fruit: Fruit): ImageView {
         val imageView = ImageView(this)
-        imageView.setImageResource(R.drawable.ffdddd)
+        var randomNumber = Random.nextInt(0, 2)
+        fruit.colour = colours[randomNumber]
+        if (fruit.colour == "pink"){
+            imageView.setImageResource(R.drawable.ffdddd)
+        }
+        else if(fruit.colour == "yellow") {
+            imageView.setImageResource(R.drawable.ffffdd)
+        }
+
         val params = LinearLayout.LayoutParams(
             resources.getDimensionPixelSize(R.dimen.fruit_size),
             resources.getDimensionPixelSize(R.dimen.fruit_size)
@@ -122,22 +138,46 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun onFruitPlaced() {
+    private fun onFruitPlaced(fruitView: View) {
+        val fruitId = fruitView.tag as Int
+        val fruit = fruits.find { it.id == fruitId } ?: placedFruits.find { it.id == fruitId }
+        val parentPlateView = fruitView.parent as? GridLayout
+        val plateId = parentPlateView?.tag as? Int
+
+        if (fruit != null && plateId != null) {
+            fruit.plateId = plateId
+            if (!placedFruits.contains(fruit)) {
+                placedFruits.add(fruit)
+            }
+        }
+
         if (placedFruitCount >= 4) {
             setupFruits()
             placedFruitCount = 0
         }
 
+        checkPlatesForMatches()
+    }
+
+
+    private fun checkPlatesForMatches() {
         val plateContainer = findViewById<GridLayout>(R.id.plate_container)
-        for (plate in plates){
-            val gridLayout: GridLayout = plateContainer.findViewWithTag<GridLayout>(plate.id)
-            val childCount = gridLayout.childCount
-            if (childCount >= 4) {
-                gridLayout.removeAllViewsInLayout()
-                updateScore()
+        for (plate in plates) {
+            val fruitsOnPlate = placedFruits.filter { it.plateId == plate.id }
+            if (fruitsOnPlate.size >= 4) {
+                val firstColour = fruitsOnPlate.first().colour
+                val allSameColour = fruitsOnPlate.all { it.colour == firstColour }
+                val gridLayout: GridLayout = plateContainer.findViewWithTag<GridLayout>(plate.id)
+                if (allSameColour) {
+                    gridLayout.removeAllViewsInLayout()
+                    updateScore()
+                    // Remove these fruits from placedFruits
+                    placedFruits.removeAll(fruitsOnPlate)
+                }
             }
         }
     }
+
 
     fun updateScore() {
         val scoreNumber = findViewById<TextView>(R.id.scoreNumber)
@@ -186,7 +226,7 @@ class GameActivity : AppCompatActivity() {
                     draggedView.visibility = View.VISIBLE
                     (v as? ImageView)?.alpha = 1.0F
                     placedFruitCount++
-                    onFruitPlaced()
+                    onFruitPlaced(draggedView)
                     true
                 }
                 DragEvent.ACTION_DRAG_ENTERED -> {
