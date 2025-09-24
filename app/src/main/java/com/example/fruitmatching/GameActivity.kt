@@ -5,7 +5,6 @@ import android.content.ClipDescription
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils.lastIndexOf
 import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
@@ -20,7 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bumptech.glide.Glide
 import com.example.fruitmatching.databinding.ActivityGameBinding
 import com.example.fruitmatching.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -90,7 +88,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun renderPlates() {
-        val plateContainer = findViewById<GridLayout>(R.id.plate_container)
+        val plateContainer = findViewById<GridLayout>(R.id.plateContainer)
         plateContainer.removeAllViews()
         for (plate in plates) {
             val plateView = createPlateView(plate)
@@ -140,7 +138,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun renderFruits() {
-        val fruitContainer = findViewById<LinearLayout>(R.id.fruit_container)
+        val fruitContainer = findViewById<LinearLayout>(R.id.fruitContainer)
         fruitContainer.removeAllViews()
         for (fruit in fruits) {
             val fruitView = createFruitView(fruit)
@@ -161,7 +159,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        val fruitContainer = findViewById<LinearLayout>(R.id.fruit_container)
+        val fruitContainer = findViewById<LinearLayout>(R.id.fruitContainer)
         if (fruitContainer.childCount == 0) {
             setupFruits()
         }
@@ -174,7 +172,7 @@ class GameActivity : AppCompatActivity() {
             .setTitle("Game Over")
             .setMessage("All plates are full.")
             .setPositiveButton("Play again") { dialog, _ ->
-                val plateContainer = findViewById<GridLayout>(R.id.plate_container)
+                val plateContainer = findViewById<GridLayout>(R.id.plateContainer)
                 plateContainer.removeAllViewsInLayout()
                 placedFruits.clear()
                 fruits.clear()
@@ -198,7 +196,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun checkPlatesForMatches() {
-        val plateContainer = findViewById<GridLayout>(R.id.plate_container)
+        val plateContainer = findViewById<GridLayout>(R.id.plateContainer)
         fullPlates.clear()
         for (plate in plates) {
             val fruitsOnPlate = placedFruits.filter { it.plateId == plate.id }

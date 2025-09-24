@@ -47,7 +47,7 @@
 
 <!--        Plates-->
         <GridLayout
-            android:id="@+id/plate_container"
+            android:id="@+id/plateContainer"
             android:layout_row="1"
             android:layout_column="0"
             android:columnCount="2"
@@ -57,7 +57,7 @@
 
 <!--        Fruits-->
         <LinearLayout
-            android:id="@+id/fruit_container"
+            android:id="@+id/fruitContainer"
             android:layout_row="4"
             android:layout_columnSpan="2"
             android:orientation="horizontal" >
@@ -65,6 +65,3 @@
     </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-<!--    app:srcCompat="@drawable/ffdddd"-->
