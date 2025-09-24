@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.fruitmatching.databinding.ActivityGameBinding
 import com.example.fruitmatching.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.reflect.Modifier
 import kotlin.collections.removeAll
 import kotlin.compareTo
 import kotlin.getValue
@@ -54,21 +55,19 @@ class GameActivity : AppCompatActivity() {
     private val fruits = mutableListOf<Fruit>()
     private val placedFruits = mutableListOf<Fruit>()
     private val plates = mutableListOf<Plate>()
-    private val colours = mutableListOf("pink", "yellow", "green",  "blue", "violet", "red", "orange", "darkGreen", "darkBlue", "darkViolet")
+    private val colours = mutableListOf("pink", "orange", "yellow", "green",  "blue", "violet", "red", "darkOrange", "darkYellow", "darkGreen", "darkBlue", "darkViolet")
     private var fullPlates = mutableListOf<Plate>()
 
 
     private fun createPlateView(plate: Plate): GridLayout {
         val gridLayout = GridLayout(this)
-        gridLayout.setBackgroundResource(R.drawable.ffffff)
-
+        gridLayout.setBackgroundResource(R.drawable.fcf3f3)
         gridLayout.columnCount = 2
         gridLayout.rowCount = 2
         val params = LinearLayout.LayoutParams(
             resources.getDimensionPixelSize(R.dimen.plate_size),
             resources.getDimensionPixelSize(R.dimen.plate_size)
         )
-
         params.marginStart = resources.getDimensionPixelSize(R.dimen.plate_margin)
         params.marginEnd = resources.getDimensionPixelSize(R.dimen.plate_margin)
         params.topMargin = resources.getDimensionPixelSize(R.dimen.plate_margin)
@@ -102,12 +101,14 @@ class GameActivity : AppCompatActivity() {
         fruit.colour = colours[randomNumber]
         when (fruit.colour) {
             "pink" -> imageView.setImageResource(R.drawable.ffdddd)
+            "orange" -> imageView.setImageResource(R.drawable.ffe1c4)
             "yellow" -> imageView.setImageResource(R.drawable.ffffdd)
             "green" -> imageView.setImageResource(R.drawable.ddffdd)
             "blue" -> imageView.setImageResource(R.drawable.ddffff)
             "violet" -> imageView.setImageResource(R.drawable.eeddff)
             "red" -> imageView.setImageResource(R.drawable.ff9191)
-            "orange" -> imageView.setImageResource(R.drawable.ffe1c4)
+            "darkOrange" -> imageView.setImageResource(R.drawable.ffc791)
+            "darkYellow" -> imageView.setImageResource(R.drawable.ffffaa)
             "darkGreen" -> imageView.setImageResource(R.drawable.aaffaa)
             "darkBlue" -> imageView.setImageResource(R.drawable.aaffff)
             "darkViolet" -> imageView.setImageResource(R.drawable.d5aaff)

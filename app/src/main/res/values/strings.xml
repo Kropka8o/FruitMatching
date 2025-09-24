@@ -44,10 +44,6 @@
     </string>
 
     <string name="rules">
-        The rules are simple.\n
-        There are six plates, each plate can fit up to four fruits. If said fruits are all of the same type/colour they disappear and you earn 4 points.\n\n
-        The fruits can be found in a line-up at the bottom of the screen, you can drag them from there onto a plate. Once all fruits have been dragged away, a new randomised line-up will appear.\n\n
-        Once a fruit is placed on a plate, you can still drag it to move it to a different plate, this way you can maneuver around the fruits to get out of tight spots and close calls\n\n
-        Once all plates are full and no fruits can be moved, the game is over.
+        The rules are simple.\nThere are six plates, each plate can fit up to four fruits. If said fruits are all of the same type/colour they disappear and you earn 4 points.\n\nThe fruits can be found in a line-up at the bottom of the screen, you can drag them from there onto a plate. Once all fruits have been dragged away, a new randomised line-up will appear.\n\nOnce a fruit is placed on a plate, you can still drag it to move it to a different plate, this way you can maneuver around the fruits to get out of tight spots and close calls\n\nOnce all plates are full and no fruits can be moved, the game is over.
     </string>
 </resources>
