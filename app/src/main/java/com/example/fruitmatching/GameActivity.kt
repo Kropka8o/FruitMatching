@@ -16,12 +16,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.fruitmatching.databinding.ActivityGameBinding
 import com.example.fruitmatching.databinding.ActivityMainBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.collections.removeAll
 import kotlin.compareTo
 import kotlin.getValue
@@ -54,8 +56,9 @@ class GameActivity : AppCompatActivity() {
     private val fruits = mutableListOf<Fruit>()
     private val placedFruits = mutableListOf<Fruit>()
     private val plates = mutableListOf<Plate>()
-    private val colours = mutableListOf("pink", "yellow")
-    var placedFruitCount = 0
+    private val colours = mutableListOf("pink", "yellow", "blue", "violet", "darkPink", "orange", "darkBlue", "darkViolet", "beige", "white")
+    private var fullPlates = mutableListOf<Plate>()
+
 
     private fun createPlateView(plate: Plate): GridLayout {
         val gridLayout = GridLayout(this)
@@ -97,13 +100,20 @@ class GameActivity : AppCompatActivity() {
 
     private fun createFruitView(fruit: Fruit): ImageView {
         val imageView = ImageView(this)
-        var randomNumber = Random.nextInt(0, 2)
+        var randomNumber = Random.nextInt(0, 10)
         fruit.colour = colours[randomNumber]
-        if (fruit.colour == "pink"){
-            imageView.setImageResource(R.drawable.ffdddd)
-        }
-        else if(fruit.colour == "yellow") {
-            imageView.setImageResource(R.drawable.ffffdd)
+        when (fruit.colour) {
+            "pink" -> imageView.setImageResource(R.drawable.ffdddd)
+            "yellow" -> imageView.setImageResource(R.drawable.ffffdd)
+            "blue" -> imageView.setImageResource(R.drawable.dffffd)
+            "violet" -> imageView.setImageResource(R.drawable.dddfff)
+            "darkPink" -> imageView.setImageResource(R.drawable.ffddee)
+            "orange" -> imageView.setImageResource(R.drawable.ffeedd)
+            "darkBlue" -> imageView.setImageResource(R.drawable.ddeeff)
+            "darkViolet" -> imageView.setImageResource(R.drawable.eeddff)
+            "beige" -> imageView.setImageResource(R.drawable.dddfdd)
+            "white" -> imageView.setImageResource(R.drawable.ffffff)
+            else -> imageView.setImageResource(R.drawable.ddffdd)
         }
 
         val params = LinearLayout.LayoutParams(
@@ -151,17 +161,45 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        if (placedFruitCount >= 4) {
+        val fruitContainer = findViewById<LinearLayout>(R.id.fruit_container)
+        if (fruitContainer.childCount == 0) {
             setupFruits()
-            placedFruitCount = 0
         }
 
         checkPlatesForMatches()
     }
 
+    private fun onGameOver() {
+        AlertDialog.Builder(this)
+            .setTitle("Game Over")
+            .setMessage("All plates are full.")
+            .setPositiveButton("Play again") { dialog, _ ->
+                val plateContainer = findViewById<GridLayout>(R.id.plate_container)
+                plateContainer.removeAllViewsInLayout()
+                placedFruits.clear()
+                fruits.clear()
+                fullPlates.clear()
+                val scoreNumber = findViewById<TextView>(R.id.scoreNumber)
+                scoreNumber.text = "0"
+                setupPlates()
+                setupFruits()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Home") { dialog, _ ->
+                val intent = Intent(this, MainActivity::class.java)
+                val scoreNumber = findViewById<TextView>(R.id.scoreNumber)
+                var score = scoreNumber.text.toString()
+                intent.putExtra("score", score)
+                startActivity(intent)
+                finish()
+            }
+            .show()
+
+    }
 
     private fun checkPlatesForMatches() {
         val plateContainer = findViewById<GridLayout>(R.id.plate_container)
+        fullPlates.clear()
         for (plate in plates) {
             val fruitsOnPlate = placedFruits.filter { it.plateId == plate.id }
             if (fruitsOnPlate.size >= 4) {
@@ -171,9 +209,18 @@ class GameActivity : AppCompatActivity() {
                 if (allSameColour) {
                     gridLayout.removeAllViewsInLayout()
                     updateScore()
-                    // Remove these fruits from placedFruits
                     placedFruits.removeAll(fruitsOnPlate)
+                } else {
+                    fullPlates.add(plate)
                 }
+            }
+        }
+        if (fullPlates.count() == 6) {
+            onGameOver()
+            val scoreNumber = findViewById<TextView>(R.id.scoreNumber)
+            val currentScore = scoreNumber.text.toString().toIntOrNull() ?: 0
+            if (currentScore > getHighScore(this)) {
+                saveHighScore(this, currentScore)
             }
         }
     }
@@ -199,7 +246,6 @@ class GameActivity : AppCompatActivity() {
                 v,
                 0
             )
-//            v.visibility = View.INVISIBLE
             true
         }
     }
@@ -220,13 +266,14 @@ class GameActivity : AppCompatActivity() {
                 }
                 DragEvent.ACTION_DROP -> {
                     val draggedView = event.localState as View
-                    val owner = draggedView.parent as ViewGroup
-                    owner.removeView(draggedView)
-                    (v as ViewGroup).addView(draggedView)
-                    draggedView.visibility = View.VISIBLE
-                    (v as? ImageView)?.alpha = 1.0F
-                    placedFruitCount++
-                    onFruitPlaced(draggedView)
+                    val gridLayout = v as GridLayout
+                    if (gridLayout.childCount < 4) {
+                        val owner = draggedView.parent as ViewGroup
+                        owner.removeView(draggedView)
+                        gridLayout.addView(draggedView)
+                        draggedView.visibility = View.VISIBLE
+                        onFruitPlaced(draggedView)
+                    }
                     true
                 }
                 DragEvent.ACTION_DRAG_ENTERED -> {
