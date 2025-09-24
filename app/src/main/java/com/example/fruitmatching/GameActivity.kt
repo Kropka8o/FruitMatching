@@ -56,13 +56,13 @@ class GameActivity : AppCompatActivity() {
     private val fruits = mutableListOf<Fruit>()
     private val placedFruits = mutableListOf<Fruit>()
     private val plates = mutableListOf<Plate>()
-    private val colours = mutableListOf("pink", "yellow", "blue", "violet", "darkPink", "orange", "darkBlue", "darkViolet", "beige", "white")
+    private val colours = mutableListOf("pink", "yellow", "green",  "blue", "violet", "red", "orange", "darkGreen", "darkBlue", "darkViolet")
     private var fullPlates = mutableListOf<Plate>()
 
 
     private fun createPlateView(plate: Plate): GridLayout {
         val gridLayout = GridLayout(this)
-        gridLayout.setBackgroundResource(R.drawable.ddffdd)
+        gridLayout.setBackgroundResource(R.drawable.ffffff)
 
         gridLayout.columnCount = 2
         gridLayout.rowCount = 2
@@ -105,15 +105,15 @@ class GameActivity : AppCompatActivity() {
         when (fruit.colour) {
             "pink" -> imageView.setImageResource(R.drawable.ffdddd)
             "yellow" -> imageView.setImageResource(R.drawable.ffffdd)
-            "blue" -> imageView.setImageResource(R.drawable.dffffd)
-            "violet" -> imageView.setImageResource(R.drawable.dddfff)
-            "darkPink" -> imageView.setImageResource(R.drawable.ffddee)
-            "orange" -> imageView.setImageResource(R.drawable.ffeedd)
-            "darkBlue" -> imageView.setImageResource(R.drawable.ddeeff)
-            "darkViolet" -> imageView.setImageResource(R.drawable.eeddff)
-            "beige" -> imageView.setImageResource(R.drawable.dddfdd)
-            "white" -> imageView.setImageResource(R.drawable.ffffff)
-            else -> imageView.setImageResource(R.drawable.ddffdd)
+            "green" -> imageView.setImageResource(R.drawable.ddffdd)
+            "blue" -> imageView.setImageResource(R.drawable.ddffff)
+            "violet" -> imageView.setImageResource(R.drawable.eeddff)
+            "red" -> imageView.setImageResource(R.drawable.ff9191)
+            "orange" -> imageView.setImageResource(R.drawable.ffe1c4)
+            "darkGreen" -> imageView.setImageResource(R.drawable.aaffaa)
+            "darkBlue" -> imageView.setImageResource(R.drawable.aaffff)
+            "darkViolet" -> imageView.setImageResource(R.drawable.d5aaff)
+            else -> imageView.setImageResource(R.drawable.b7b7b7)
         }
 
         val params = LinearLayout.LayoutParams(
